@@ -9,7 +9,7 @@ phases:
     runtime-versions:
       java: corretto21
 
-  pre-build:
+  pre_build:
     commands:
       - echo "=== Starting My Build And Test Stage ==="
 
@@ -17,7 +17,7 @@ phases:
     commands:
       - mvn -B test -Dtest=CalculatorTest
 
-  post-build:
+  post_build:
     commands:
       - echo "=== Ending the Build And Test Stage ==="
       - echo "Status= $CODEBUILD_BUILD_SUCCEEDING"
