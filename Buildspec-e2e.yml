@@ -1,0 +1,42 @@
+version: 0.2
+
+# buildspec består oftast av tre faser:
+# pre-build  - förberedelse innan bygget (här: installera Playwright + Chromium)
+# build      - själva bygget eller testerna
+# post-build - efterarbete (t.ex. rapportering, uppstädning)
+#
+# install-fasen används för att välja språkversion (runtime-versions)
+phases:
+  install:
+    runtime-versions:
+      java: corretto21
+
+  pre_build:
+    commands:
+      - echo "Installerar Playwright-webbläsare (Chromium + systemberoenden)..."
+      - mvn -B exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium"
+
+  build:
+    commands:
+      - echo "Kör E2E-tester (CalculatorE2ETest) med Playwright"
+      - mvn -B test -Dtest=CalculatorE2ETest
+
+  post_build:
+    commands:
+      - echo "E2E-tester klara. Status= $CODEBUILD_BUILD_SUCCEEDING"
+
+reports:
+  E2ETestReport:
+    files:
+      - '**/*'
+    base-directory: 'target/surefire-reports'
+    file-format: JUNITXML
+
+artifacts:
+  files:
+    - '**/*'
+
+cache:
+  paths:
+    - '/root/.m2/**/*'
+    - '/root/.cache/ms-playwright/**/*'

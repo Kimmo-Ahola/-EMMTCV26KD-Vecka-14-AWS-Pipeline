@@ -1,0 +1,38 @@
+version: 0.2
+
+# buildspec består oftast av tre faser:
+# pre-build
+# build
+# post-build
+phases:
+  install:
+    runtime-versions:
+      java: corretto21
+
+  pre-build:
+    commands:
+      - echo "=== Starting My Build And Test Stage ==="
+
+  build:
+    commands:
+      - mvn -B test -Dtest=CalculatorTest
+
+  post-build:
+    commands:
+      - echo "=== Ending the Build And Test Stage ==="
+      - echo "Status= $CODEBUILD_BUILD_SUCCEEDING"
+
+reports:
+  UnitTestReport:
+    files:
+      - "**/*"
+    base-directory: 'target/surefire-reports'
+    file-format: JUNITXML
+
+artifacts:
+  files:
+    - "**/*"
+
+cache:
+  paths:
+    - '/root/.m2/**/*'
