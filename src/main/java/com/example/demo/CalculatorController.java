@@ -16,7 +16,7 @@ public class CalculatorController {
     public String index(@RequestParam(defaultValue = "0") int a, @RequestParam(defaultValue = "0") int b, Model model) {
         model.addAttribute("a", a);
         model.addAttribute("b", b);
-        model.addAttribute("result", calculator.add(a, b));
+        model.addAttribute("sum", calculator.add(a, b));
 
         return "index";
     }
