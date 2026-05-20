@@ -15,7 +15,7 @@ phases:
 
   build:
     commands:
-      - mvn -B test -Dtest=CalculatorTests
+      - mvn -B test -Dgroups=unit
 
   post_build:
     commands:

@@ -9,6 +9,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
+@Tag("e2e")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CalculatorE2ETests {
