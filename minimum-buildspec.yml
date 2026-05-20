@@ -1,0 +1,10 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto21 # java version 21. Detta är en AWS image
+  build:
+    commands:
+      - echo "run ALL tests" # print to console. slå på cloudwatch logs
+      - mvn -B test # run all tests with maven
