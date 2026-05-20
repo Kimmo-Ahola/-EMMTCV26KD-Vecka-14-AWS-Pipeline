@@ -1,42 +1,49 @@
-version: 0.2
+version: 0.2 # finns bara 0.1 och 0.2, vi tar den senaste
 
-# buildspec består oftast av tre faser:
-# pre-build  - förberedelse innan bygget (här: installera Playwright + Chromium)
-# build      - själva bygget eller testerna
-# post-build - efterarbete (t.ex. rapportering, uppstädning)
-#
-# install-fasen används för att välja språkversion (runtime-versions)
+# phases först
+# en phase består ofta av
+# install = vi lägger till runtime
+# pre_build = körs innan build
+# build = bygger projektfiler och kanske kör tester
+# post_build = vi kan rensa upp eller spara loggar etc
+
 phases:
   install:
     runtime-versions:
-      java: corretto21
+      java: corretto21 # 21 för att vi har java version 21
 
+
+  # man kan i pre_build hämta images från docker eller aws registry
+  # eller inlogg från secrets manager
   pre_build:
     commands:
-      - echo "Installerar Playwright-webbläsare (Chromium + systemberoenden)..."
-      - mvn -B exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium"
+      - echo "========== Starting my e2e test stage =========="
+      - mvn -B exec:java -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install-deps chromium"
+      - mvn -B exec:java -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install chromium"
 
   build:
     commands:
-      - echo "Kör E2E-tester (tag=e2e) med Playwright"
-      - mvn -B test -Dgroup=e2e
+      - echo "Vi kör E2E-testerna"
+      - mvn -B test -Dgroups=e2e
+
 
   post_build:
     commands:
-      - echo "E2E-tester klara. Status= $CODEBUILD_BUILD_SUCCEEDING"
+      - echo "========== Ending my e2e test stage =========="
 
 reports:
-  E2ETestReport:
+  UnitTestReport:
     files:
-      - '**/*'
+      - "**/*"
     base-directory: 'target/surefire-reports'
     file-format: JUNITXML
 
 artifacts:
   files:
-    - '**/*'
+    - "**/*"
 
 cache:
   paths:
     - '/root/.m2/**/*'
     - '/root/.cache/ms-playwright/**/*'
+
