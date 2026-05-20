@@ -19,7 +19,7 @@ phases:
   build:
     commands:
       - echo "Kör E2E-tester (CalculatorE2ETest) med Playwright"
-      - mvn -B test -Dtest=CalculatorE2ETest
+      - mvn -B test -Dtest=CalculatorE2ETests
 
   post_build:
     commands:
